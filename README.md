@@ -56,8 +56,8 @@ Abrir **[http://localhost:3000](http://localhost:3000)**. No abrir el puerto int
 ### 4. Probar el sistema
 
 1. Al abrir la página se muestra únicamente «Iniciar sesión»: no hay menú, datos de operador ni panel de trámites. Docker prepara en segundo plano el operador ficticio del entorno; **esto no inicia una sesión SIGET-UNS ni autentica con ChatGPT**.
-2. Elegir «Estudiante UNS» con un correo ficticio terminado en `@uns.edu.pe`, o «Persona externa» con correo personal ficticio. Escribir un nombre completo de prueba; no introducir contraseñas.
-3. Completar «Mis datos» y crear un trámite. El FUT toma el nombre y correo de la cuenta seleccionada; los externos no necesitan código, facultad ni escuela.
+2. Elegir «Estudiante UNS» con un correo ficticio terminado en `@uns.edu.pe`, o «Persona externa» con correo personal ficticio. Introducir la contraseña de demostración `123`; nunca la contraseña real del correo. El servidor comprueba ese valor sin guardarlo ni conectarse a Microsoft.
+3. En el primer acceso completar «Mis datos», incluido el nombre completo de prueba, y crear un trámite. El FUT toma el nombre del perfil y el correo de la cuenta seleccionada; los externos no necesitan código, facultad ni escuela.
 4. Guardar el borrador, adjuntar un documento ficticio y enviar. Revisar número de expediente, PDF e historial.
 5. Para probar Secretaría: cerrar la **cuenta simulada**, desplegar «Acceso de administración · demostración» en la pantalla de inicio y pulsar «Iniciar sesión administrativa». Esa entrada exige que el operador tenga permiso de atención y administra únicamente esa instalación local.
 

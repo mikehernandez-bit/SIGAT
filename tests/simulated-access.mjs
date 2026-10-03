@@ -8,8 +8,9 @@ async function call(path, data, expected = 200, headers = {}) {
   assert.equal(response.status, expected, `${path}: ${JSON.stringify(value)}`); checks++; return value;
 }
 const tag = Date.now();
-const student = {kind: "institutional", name: "Estudiante Ficticio QA", email: `qa${tag}@uns.edu.pe`};
-const external = {kind: "external", name: "Persona Externa QA", email: `qa${tag}@example.test`};
+const student = {kind: "institutional", password: "123", email: `qa${tag}@uns.edu.pe`};
+const external = {kind: "external", password: "123", email: `qa${tag}@example.test`};
+const studentName = `Estudiante UNS qa${tag}`, externalName = `Persona externa qa${tag}`;
 await call("simulation/signout", {});
 await call("bootstrap",undefined,401);
 await call("draft",{},401);
@@ -25,11 +26,11 @@ try {
   let boot = await call("bootstrap");
   check(boot.user.accountKind, "institutional"); check(boot.user.role, "student"); check(boot.user.email, student.email); check(boot.mine.length, 0); check(boot.users.length, 0);
   let d = await call("draft", {});
-  check(d.content.name, student.name); check(d.content.email, student.email); check(d.content.signature, student.name);
+  check(d.content.name, studentName); check(d.content.email, student.email); check(d.content.signature, studentName);
   const content = {...d.content, name:"Suplantación no permitida", email:"fake@example.test", signature:"Otra firma", dni:"12345678", phone:"999000111", address:"Domicilio ficticio QA", serviceId:"fut-1-1", reason:"Solicitud ficticia para probar el perfil y la vinculación del FUT.", code:"", consent:true};
   await call(`requests/${d.id}`, {action:"submit", revision:d.revision, content}, 400);
   d = await call(`requests/${d.id}`, {action:"submit", revision:d.revision, content:{...content,code:"QA2026"}});
-  check(d.content.name, student.name); check(d.content.email, student.email); check(d.content.signature, student.name); check(d.status, "received");
+  check(d.content.name, studentName); check(d.content.email, student.email); check(d.content.signature, studentName); check(d.status, "received");
   await call("users", {id:boot.user.id, role:"admin"}, 404);
   await call("simulation/signin", external);
   boot = await call("bootstrap");
@@ -38,14 +39,15 @@ try {
   await call(`requests/${d.id}`, {action:"save",revision:d.revision,content}, 404);
   let e = await call("draft", {});
   check(e.content.faculty, ""); check(e.content.school, ""); check(e.content.code, "");
-  const ef = {...content,faculty:"",school:"",code:""};
+  const ef = {...content,name:externalName,faculty:"",school:"",code:""};
   await call("profile", {content:ef});
-  boot = await call("bootstrap"); check(boot.user.profile.name, external.name); check(boot.user.profile.email, external.email);
+  boot = await call("bootstrap"); check(boot.user.profile.name, externalName); check(boot.user.profile.email, external.email);
   e = await call(`requests/${e.id}`, {action:"submit",revision:e.revision,content:ef});
-  check(e.content.name, external.name); check(e.content.email, external.email); check(e.content.signature, external.name); check(e.status,"received");
+  check(e.content.name, externalName); check(e.content.email, external.email); check(e.content.signature, externalName); check(e.status,"received");
   boot = await call("bootstrap"); check(boot.mine.length,1); check(boot.mine[0].id,e.id);
-  await call("simulation/signin", {...student,name:"Otro nombre no sobrescribe el perfil"});
-  boot = await call("bootstrap"); check(boot.user.name,student.name); check(boot.mine.length,1); check(boot.mine[0].id,d.id);
+  await call("simulation/signin", {...student,name:"Otro nombre no sobrescribe el perfil"},400);
+  await call("simulation/signin", student);
+  boot = await call("bootstrap"); check(boot.user.name,studentName); check(boot.mine.length,1); check(boot.mine[0].id,d.id);
   await call(`requests/${e.id}`,undefined,404);
   await call("simulation/signout",{});
   await call("bootstrap",undefined,401);

@@ -4,7 +4,7 @@ Sistema funcional para el proyecto de Pasantía Nacional 2026. Acceso privado, i
 
 ## Estudiante
 
-1. Abre la pantalla «Iniciar sesión». En Docker el entorno local se prepara automáticamente; en Sites el acceso privado se mantiene separado. Elige «Estudiante UNS» y la opción «Continuar con Microsoft · simulación» con un correo terminado en `@uns.edu.pe`, o «Persona externa» con un correo personal. Se solicita un nombre ficticio porque no existe conexión con el proveedor; nunca se solicitan contraseñas. No hay menú ni consultas de expedientes antes de iniciar sesión SIGET-UNS.
+1. Abre la pantalla «Iniciar sesión». Elige «Estudiante UNS» con un correo terminado en `@uns.edu.pe`, o «Persona externa» con un correo personal. Introduce únicamente la contraseña de demostración `123`. No uses contraseñas reales. El primer acceso abre «Mis datos» para completar el nombre y el perfil. No hay menú ni consultas de expedientes antes de iniciar sesión SIGET-UNS.
 2. En «Mis datos», guarda la información que deseas reutilizar.
 3. Selecciona «Nuevo trámite» o un servicio del catálogo.
 4. Completa los datos; redacta el fundamento con ayuda de la plantilla. Reemplaza los textos entre corchetes.

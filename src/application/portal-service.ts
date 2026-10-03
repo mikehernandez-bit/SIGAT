@@ -46,7 +46,9 @@ export class PortalService {
     return this.repo.createDraft(user, fut, offices[1]);
   }
   async updateProfile(user: User, value: unknown) {
-    const f = this.identifiedFut(user, parseFut(value));
+    const parsed = parseFut(value);
+    if (parsed.name.trim().length < 3) throw new PortalError("invalid", "Completa tu nombre en Mis datos.");
+    const f = this.identifiedFut({...user,name:parsed.name.trim()}, parsed);
     await this.repo.updateProfile(user, {
       name: f.name, dni: f.dni, faculty: f.faculty, school: f.school,
       code: f.code, email: f.email, phone: f.phone, address: f.address,

@@ -122,7 +122,7 @@ failInsert = true;
 await assert.rejects(() => service.upload(record.id, user, { name: "test.pdf", size: pdf.length, bytes: pdf, kind: "evidence", revision: 5 }), /Simulated write failure/); checks++;
 check(deletedKey === "requests/request/fixed-id.pdf", "Compensación solo del objeto nuevo");
 const {parseSimulatedLogin} = await load("src/domain/account-policy.ts");
-const simulated = {kind:"institutional",name:"Persona Ficticia",email:"  QA@UNS.EDU.PE  "};
+const simulated = {kind:"institutional",password:"123",email:"  QA@UNS.EDU.PE  "};
 check(parseSimulatedLogin(simulated).email === "qa@uns.edu.pe", "Correo normalizado");
 rejected(() => parseSimulatedLogin({...simulated,email:"qa@sub.uns.edu.pe"}), "invalid");
 rejected(() => parseSimulatedLogin({...simulated,email:"qa@uns.edu.pe.evil.test"}), "invalid");

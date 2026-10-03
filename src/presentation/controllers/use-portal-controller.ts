@@ -39,7 +39,7 @@ export function usePortalController(client: PortalClient) {
     [formError, setFormError] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [accessKind, setAccessKind] = useState<"institutional" | "external">("institutional");
-  const [accessName, setAccessName] = useState("");
+  const [accessPassword, setAccessPassword] = useState("");
   const [accessEmail, setAccessEmail] = useState("");
   const [accessStatus, setAccessStatus] = useState({available:false, canAdmin:false});
   const linkedAccount = boot?.user.accountKind === "institutional" || boot?.user.accountKind === "external";
@@ -399,7 +399,7 @@ export function usePortalController(client: PortalClient) {
 
 
   function changeAccount(kind: "institutional" | "external") {
-    setAccessKind(kind); setAccessEmail(""); setFormError("");
+    setAccessKind(kind); setAccessEmail(""); setAccessPassword(""); setFormError("");
   }
   function accessTransition(run: () => void) {
     if (dirty || profileDirty) setConfirm({ title: "¿Cambiar de cuenta?", description: "Hay cambios sin guardar. Cancela para guardarlos antes de cambiar de perfil.", run });
@@ -415,10 +415,11 @@ export function usePortalController(client: PortalClient) {
     accessTransition(() => { void (async () => {
       setBusy(true); setFormError("");
       try {
-        await client.api("simulation/signin", { kind: accessKind, name: accessName, email: accessEmail });
+        await client.api("simulation/signin", { kind: accessKind, email: accessEmail, password: accessPassword });
+        setAccessPassword("");
         clearAccountScreen(); setBoot(null); setView("acceso");
         const next = await refresh(); if (!next) return;
-        setView("inicio");
+        setView(next.user.profile.dni ? "inicio" : "perfil");
         toast.success("Cuenta simulada activa. Tus trámites quedan asociados a este perfil.");
       } catch(error) { fail(error); } finally { setBusy(false); }
     })(); });
@@ -435,10 +436,10 @@ export function usePortalController(client: PortalClient) {
   function signOutAccount() {
     accessTransition(() => { void (async () => {
       setBusy(true);
-      try { await client.api("simulation/signout", {}); clearAccountScreen(); setBoot(null); setAccessName(""); setAccessEmail(""); setView("inicio"); await refresh(); toast.success("Sesión cerrada. Tus solicitudes se conservan."); }
+      try { await client.api("simulation/signout", {}); clearAccountScreen(); setBoot(null); setAccessPassword(""); setAccessEmail(""); setView("inicio"); await refresh(); toast.success("Sesión cerrada. Tus solicitudes se conservan."); }
       catch(error) { fail(error); } finally { setBusy(false); }
     })(); });
   }
-  return { accessStatus, linkedAccount, signInAdministration, accessKind, accessName, accessEmail, setAccessName, setAccessEmail, changeAccount, signInAccount, signOutAccount, external, view, setView, mode, setMode, boot, loading, loadError, busy, fut, current, step, setStep, dirty, selected, originView, profileFut, query, setQuery, category, setCategory, filter, setFilter, officeFilter, setOfficeFilter, year, setYear, trackCode, setTrackCode, tracked, trackDone, confirm, setConfirm, action, setAction, message, setMessage, destination, setDestination, formError, inputRef, staff, admin, notices, refresh, update, nav, start, open, doSave, send, uploadFiles, removeFile, attend, cancel, edit, download, records, active, updateProfileField, track, markAllRead, openNotice, saveProfile, exportReport, changeRole };
+  return { accessStatus, linkedAccount, signInAdministration, accessKind, accessPassword, accessEmail, setAccessPassword, setAccessEmail, changeAccount, signInAccount, signOutAccount, external, view, setView, mode, setMode, boot, loading, loadError, busy, fut, current, step, setStep, dirty, selected, originView, profileFut, query, setQuery, category, setCategory, filter, setFilter, officeFilter, setOfficeFilter, year, setYear, trackCode, setTrackCode, tracked, trackDone, confirm, setConfirm, action, setAction, message, setMessage, destination, setDestination, formError, inputRef, staff, admin, notices, refresh, update, nav, start, open, doSave, send, uploadFiles, removeFile, attend, cancel, edit, download, records, active, updateProfileField, track, markAllRead, openNotice, saveProfile, exportReport, changeRole };
 }
 export type PortalController = ReturnType<typeof usePortalController>;

@@ -46,10 +46,11 @@ Con el servidor en 127.0.0.1:5173 y la base local inicializada:
 
 1. node tests/api-workflow.mjs: realiza 48 comprobaciones del recorrido, sesión obligatoria, validación, adjuntos, snapshots, persistencia y notificaciones. Crea un expediente ficticio local.
 2. node tests/access-control.mjs: realiza 8 comprobaciones de aislamiento de cuentas y roles. Sus fixtures se retiran al terminar y se restaura el rol local del propietario.
-3. node --experimental-vm-modules tests/domain-architecture.mjs: comprueba las dependencias entre capas y reglas/casos de uso con adaptadores simulados, sin servidor.
+3. node --experimental-vm-modules tests/domain-architecture.mjs: realiza 78 comprobaciones de dependencias entre capas y reglas/casos de uso con adaptadores simulados, sin servidor.
 4. node node_modules/typescript/bin/tsc --noEmit: verifica tipos.
 5. npm run build: verifica salida Workers.
-6. node tests/simulated-access.mjs: 65 comprobaciones de dominio de correo, sesión obligatoria, ausencia de contraseñas, veracidad del vínculo cuenta/FUT, envío sin matrícula para externos, persistencia y aislamiento entre perfiles. Crea únicamente cuentas y solicitudes ficticias locales y cierra la sesión al terminar; administración requiere entrada explícita.
+6. node tests/simulated-access.mjs: 66 comprobaciones de dominio de correo, sesión obligatoria, validación de la contraseña ficticia `123` y rechazo de valores distintos, vínculo cuenta/FUT, envío sin matrícula para externos, persistencia y aislamiento entre perfiles. Crea únicamente cuentas y solicitudes ficticias locales y cierra la sesión al terminar; administración requiere entrada explícita.
+7. En Docker: `docker compose exec portal node tests/docker-smoke.mjs` realiza 12 comprobaciones de transporte, acceso, FUT y adjunto ficticio. Después de recrear el contenedor sin retirar el volumen, `docker compose exec portal node tests/docker-smoke.mjs --verify` realiza 5 comprobaciones de persistencia del expediente y su archivo.
 
 No ejecutes los scripts de pruebas contra servicios institucionales. Los datos locales de prueba no se publican: se excluyen .wrangler, .sites-runtime y archivos de entorno.
 

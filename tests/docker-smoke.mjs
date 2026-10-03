@@ -14,7 +14,7 @@ if (process.argv.includes("--verify")) {
   const saved = JSON.parse(readFileSync(stateFile,"utf8"));
   await call("simulation/signin",saved.account);
   const d=await call("requests/"+saved.id);
-  check(d.status==="received" && d.code===saved.code && d.content.name===saved.account.name);
+  check(d.status==="received" && d.code===saved.code && d.content.email===saved.account.email);
   const file=await fetch(origin+"/api/portal/files/"+saved.file,{headers:{Cookie:"__sites_local_auth=1"}});
   check(file.status===200 && (await file.arrayBuffer()).byteLength===saved.size);
   await call("simulation/signout",{});
@@ -26,7 +26,7 @@ if (process.argv.includes("--verify")) {
   await call("bootstrap",undefined,401,{Cookie:"","oai-authenticated-user-id":"spoof","oai-authenticated-user-email":"spoof@example.test"});
   await call("simulation/signin",{},403,{Origin:"https://foreign.example"});
   await call("simulation/signout",{});
-  const account={kind:"institutional",name:"Prueba Docker Ficticia",email:`docker${Date.now()}@uns.edu.pe`};
+  const account={kind:"institutional",password:"123",email:`docker${Date.now()}@uns.edu.pe`};
   await call("simulation/signin",account);
   let d=await call("draft",{});
   const content={...d.content,dni:"12345678",code:"QA-DOCKER",phone:"999000111",address:"Domicilio ficticio Docker",serviceId:"justificacion-medica",reason:"Solicitud ficticia para verificar Docker y la persistencia; no es una situación médica real.",consent:true};

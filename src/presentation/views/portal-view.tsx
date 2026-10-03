@@ -320,7 +320,7 @@ export default function PortalView({ controller }: { controller: PortalControlle
           <Input
             aria-label="Nombres y apellidos"
             value={fut.name}
-            readOnly={controller.linkedAccount}
+            readOnly={controller.linkedAccount && view !== "perfil"}
             maxLength={160}
             onChange={(e) => update("name", e.target.value)}
             autoComplete="name"
